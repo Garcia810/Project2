@@ -1,0 +1,32 @@
+async fn create_db() -> Result<SqlitePool> {
+    use std::path::Path;
+
+    // Create the database
+    let db_url = env::var("DATABASE_URL")
+        .wrap_err("DATABASE_URL not set")?;
+
+    if !sqlx::Sqlite::database_exists(&db_url).await? {
+        sqlx::Sqlite::create_database(&db_url).await?;
+    }
+
+    // Connect to the database
+    let db = SqlitePool::connect(&db_url).await?;
+
+    // Migrate the database
+    let migrations = if env::var("RUST_ENV") == Ok("production".to_string()) {
+        // Productions migrations dir
+        std::env::current_exe()?.join("./migrations")
+    } else {
+        // Development migrations dir
+        let crate_dir = std::env::var("CARGO_MANIFEST_DIR")?;
+        Path::new(&crate_dir)
+            .join("./migrations")
+    };
+
+    sqlx::migrate::Migrator::new(migrations)
+        .await?
+        .run(&db)
+        .await?;
+
+    Ok(db)
+}
