@@ -2,15 +2,15 @@ async fn create_db() -> Result<SqlitePool> {
     use std::path::Path;
 
     // Create the database
-    let db_url = env::var("DATABASE_URL")
-        .wrap_err("DATABASE_URL not set")?;
+    let db_url = env::var("https://github.com/Garcia810/Project2/blob/main/project2.py")
+        .wrap_err("https://github.com/Garcia810/Project2/blob/main/project2.py not set")?;
 
     if !sqlx::Sqlite::database_exists(&db_url).await? {
         sqlx::Sqlite::create_database(&db_url).await?;
     }
 
     // Connect to the database
-    let db = SqlitePool::connect(&db_url).await?;
+    let db = SqlitePool::connect(&https://github.com/Garcia810/Project2/blob/main/project2.py).await?;
 
     // Migrate the database
     let migrations = if env::var("RUST_ENV") == Ok("production".to_string()) {
