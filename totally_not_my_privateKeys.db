@@ -23,6 +23,16 @@ async fn create_db() -> Result<SqlitePool> {
             .join("./migrations")
     };
 
+    private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+)
+expired_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+)
+POST:/auth
+GET:/.well-known/jwks.json
     sqlx::migrate::Migrator::new(migrations)
         .await?
         .run(&db)
